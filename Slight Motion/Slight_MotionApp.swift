@@ -1,17 +1,26 @@
-//
-//  Slight_MotionApp.swift
-//  Slight Motion
-//
-//  Created by David White on 06/11/2026.
-//
-
 import SwiftUI
 
 @main
 struct Slight_MotionApp: App {
+    @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
+    @StateObject private var controller = MotionController()
+
     var body: some Scene {
-        WindowGroup {
-            ContentView()
+        MenuBarExtra {
+            ContentView(controller: controller)
+        } label: {
+            Image(systemName: controller.isEngaged ? "hand.pinch.fill" : "hand.pinch")
+                .symbolRenderingMode(.monochrome)
+                .accessibilityLabel(controller.isEngaged ? "Slight Motion — pinch engaged" : "Slight Motion — \(controller.statusTitle)")
         }
+        .menuBarExtraStyle(.window)
     }
+}
+
+final class AppDelegate: NSObject, NSApplicationDelegate {
+    func applicationDidFinishLaunching(_ notification: Notification) {
+        NSApp.setActivationPolicy(.accessory)
+    }
+
+    func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool { false }
 }
