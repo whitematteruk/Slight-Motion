@@ -1,0 +1,549 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 110;
+	objects = {
+
+/* Begin PBXContainerItemProxy section */
+		637922C6309DF98A00C32A8E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 637922B0309DF98800C32A8E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 637922B7309DF98800C32A8E;
+			remoteInfo = "Slight Motion";
+		};
+		637922D0309DF98A00C32A8E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 637922B0309DF98800C32A8E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 637922B7309DF98800C32A8E;
+			remoteInfo = "Slight Motion";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		637922B8309DF98800C32A8E /* Slight Motion.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Slight Motion.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		637922C5309DF98A00C32A8E /* Slight MotionTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Slight MotionTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		637922CF309DF98A00C32A8E /* Slight MotionUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Slight MotionUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		637922BA309DF98800C32A8E /* Slight Motion */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "Slight Motion";
+			sourceTree = "<group>";
+		};
+		637922C8309DF98A00C32A8E /* Slight MotionTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "Slight MotionTests";
+			sourceTree = "<group>";
+		};
+		637922D2309DF98A00C32A8E /* Slight MotionUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "Slight MotionUITests";
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		637922B5309DF98800C32A8E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			files = (
+			);
+		};
+		637922C2309DF98A00C32A8E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			files = (
+			);
+		};
+		637922CC309DF98A00C32A8E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			files = (
+			);
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		637922AF309DF98800C32A8E = {
+			isa = PBXGroup;
+			children = (
+				637922BA309DF98800C32A8E /* Slight Motion */,
+				637922C8309DF98A00C32A8E /* Slight MotionTests */,
+				637922D2309DF98A00C32A8E /* Slight MotionUITests */,
+				637922B9309DF98800C32A8E /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		637922B9309DF98800C32A8E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				637922B8309DF98800C32A8E /* Slight Motion.app */,
+				637922C5309DF98A00C32A8E /* Slight MotionTests.xctest */,
+				637922CF309DF98A00C32A8E /* Slight MotionUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		637922B7309DF98800C32A8E /* Slight Motion */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 637922D7309DF98A00C32A8E /* Build configuration list for PBXNativeTarget "Slight Motion" */;
+			buildPhases = (
+				637922B4309DF98800C32A8E /* Sources */,
+				637922B5309DF98800C32A8E /* Frameworks */,
+				637922B6309DF98800C32A8E /* Resources */,
+			);
+			buildRules = (
+			);
+			fileSystemSynchronizedGroups = (
+				637922BA309DF98800C32A8E /* Slight Motion */,
+			);
+			name = "Slight Motion";
+			productName = "Slight Motion";
+			productReference = 637922B8309DF98800C32A8E /* Slight Motion.app */;
+			productType = "com.apple.product-type.application";
+		};
+		637922C4309DF98A00C32A8E /* Slight MotionTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 637922DA309DF98A00C32A8E /* Build configuration list for PBXNativeTarget "Slight MotionTests" */;
+			buildPhases = (
+				637922C1309DF98A00C32A8E /* Sources */,
+				637922C2309DF98A00C32A8E /* Frameworks */,
+				637922C3309DF98A00C32A8E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				637922C7309DF98A00C32A8E /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				637922C8309DF98A00C32A8E /* Slight MotionTests */,
+			);
+			name = "Slight MotionTests";
+			productName = "Slight MotionTests";
+			productReference = 637922C5309DF98A00C32A8E /* Slight MotionTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		637922CE309DF98A00C32A8E /* Slight MotionUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 637922DD309DF98A00C32A8E /* Build configuration list for PBXNativeTarget "Slight MotionUITests" */;
+			buildPhases = (
+				637922CB309DF98A00C32A8E /* Sources */,
+				637922CC309DF98A00C32A8E /* Frameworks */,
+				637922CD309DF98A00C32A8E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				637922D1309DF98A00C32A8E /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				637922D2309DF98A00C32A8E /* Slight MotionUITests */,
+			);
+			name = "Slight MotionUITests";
+			productName = "Slight MotionUITests";
+			productReference = 637922CF309DF98A00C32A8E /* Slight MotionUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		637922B0309DF98800C32A8E /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2700;
+				LastUpgradeCheck = 2700;
+				TargetAttributes = {
+					637922B7309DF98800C32A8E = {
+						CreatedOnToolsVersion = 27.0;
+					};
+					637922C4309DF98A00C32A8E = {
+						CreatedOnToolsVersion = 27.0;
+						TestTargetID = 637922B7309DF98800C32A8E;
+					};
+					637922CE309DF98A00C32A8E = {
+						CreatedOnToolsVersion = 27.0;
+						TestTargetID = 637922B7309DF98800C32A8E;
+					};
+				};
+			};
+			buildConfigurationList = 637922B3309DF98800C32A8E /* Build configuration list for PBXProject "Slight Motion" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 637922AF309DF98800C32A8E;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 637922B9309DF98800C32A8E /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				637922B7309DF98800C32A8E /* Slight Motion */,
+				637922C4309DF98A00C32A8E /* Slight MotionTests */,
+				637922CE309DF98A00C32A8E /* Slight MotionUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		637922B6309DF98800C32A8E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			files = (
+			);
+		};
+		637922C3309DF98A00C32A8E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			files = (
+			);
+		};
+		637922CD309DF98A00C32A8E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			files = (
+			);
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		637922B4309DF98800C32A8E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			files = (
+			);
+		};
+		637922C1309DF98A00C32A8E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			files = (
+			);
+		};
+		637922CB309DF98A00C32A8E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			files = (
+			);
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		637922C7309DF98A00C32A8E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 637922B7309DF98800C32A8E /* Slight Motion */;
+			targetProxy = 637922C6309DF98A00C32A8E /* PBXContainerItemProxy */;
+		};
+		637922D1309DF98A00C32A8E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 637922B7309DF98800C32A8E /* Slight Motion */;
+			targetProxy = 637922D0309DF98A00C32A8E /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		637922D5309DF98A00C32A8E /* Debug configuration for PBXProject "Slight Motion" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 5G4C2X8XE6;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 26.7;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		637922D6309DF98A00C32A8E /* Release configuration for PBXProject "Slight Motion" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 5G4C2X8XE6;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 26.7;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		637922D8309DF98A00C32A8E /* Debug configuration for PBXNativeTarget "Slight Motion" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5G4C2X8XE6;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "uk.whitematter.Slight-Motion";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		637922D9309DF98A00C32A8E /* Release configuration for PBXNativeTarget "Slight Motion" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5G4C2X8XE6;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "uk.whitematter.Slight-Motion";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		637922DB309DF98A00C32A8E /* Debug configuration for PBXNativeTarget "Slight MotionTests" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5G4C2X8XE6;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 26.7;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "uk.whitematter.Slight-MotionTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Slight Motion.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Slight Motion";
+			};
+			name = Debug;
+		};
+		637922DC309DF98A00C32A8E /* Release configuration for PBXNativeTarget "Slight MotionTests" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5G4C2X8XE6;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 26.7;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "uk.whitematter.Slight-MotionTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Slight Motion.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Slight Motion";
+			};
+			name = Release;
+		};
+		637922DE309DF98A00C32A8E /* Debug configuration for PBXNativeTarget "Slight MotionUITests" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5G4C2X8XE6;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "uk.whitematter.Slight-MotionUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = "Slight Motion";
+			};
+			name = Debug;
+		};
+		637922DF309DF98A00C32A8E /* Release configuration for PBXNativeTarget "Slight MotionUITests" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5G4C2X8XE6;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "uk.whitematter.Slight-MotionUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = "Slight Motion";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		637922B3309DF98800C32A8E /* Build configuration list for PBXProject "Slight Motion" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				637922D5309DF98A00C32A8E /* Debug configuration for PBXProject "Slight Motion" */,
+				637922D6309DF98A00C32A8E /* Release configuration for PBXProject "Slight Motion" */,
+			);
+			defaultConfigurationName = Release;
+		};
+		637922D7309DF98A00C32A8E /* Build configuration list for PBXNativeTarget "Slight Motion" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				637922D8309DF98A00C32A8E /* Debug configuration for PBXNativeTarget "Slight Motion" */,
+				637922D9309DF98A00C32A8E /* Release configuration for PBXNativeTarget "Slight Motion" */,
+			);
+			defaultConfigurationName = Release;
+		};
+		637922DA309DF98A00C32A8E /* Build configuration list for PBXNativeTarget "Slight MotionTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				637922DB309DF98A00C32A8E /* Debug configuration for PBXNativeTarget "Slight MotionTests" */,
+				637922DC309DF98A00C32A8E /* Release configuration for PBXNativeTarget "Slight MotionTests" */,
+			);
+			defaultConfigurationName = Release;
+		};
+		637922DD309DF98A00C32A8E /* Build configuration list for PBXNativeTarget "Slight MotionUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				637922DE309DF98A00C32A8E /* Debug configuration for PBXNativeTarget "Slight MotionUITests" */,
+				637922DF309DF98A00C32A8E /* Release configuration for PBXNativeTarget "Slight MotionUITests" */,
+			);
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 637922B0309DF98800C32A8E /* Project object */;
+	validationLevel = 1;
+}
