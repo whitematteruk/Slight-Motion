@@ -1,7 +1,7 @@
 import SwiftUI
 import AppKit
 
-private let motionAccent = Color(red: 0.15, green: 0.66, blue: 0.56)
+private let motionAccent = Color(.accent)
 
 struct ContentView: View {
     @ObservedObject var controller: MotionController
@@ -41,7 +41,6 @@ struct ContentView: View {
                 .padding(.vertical, 7)
             }
             .buttonStyle(.borderedProminent)
-            .tint(motionAccent)
             .controlSize(.large)
             .accessibilityIdentifier("toggleGestureScrolling")
 
@@ -99,6 +98,7 @@ struct ContentView: View {
             }
             #endif
         }
+        .tint(motionAccent)
         .padding(22)
         .frame(width: 352)
         .background(MenuVisibilityObserver(onChange: controller.menuVisibilityChanged))
