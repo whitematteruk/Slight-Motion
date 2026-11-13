@@ -1,0 +1,8 @@
+<template>
+  <svg class="brand-mark" viewBox="0 0 38 38" fill="none" aria-hidden="true">
+    <rect width="38" height="38" rx="11" fill="#5537DB"/>
+    <path d="M9.5 16.4c1.1-3.7 3.6-6 6.5-6.2 2.5-.2 4.4 1.3 5.4 3.2l4.9 8.9c1.3 2.3.5 4.2-1.4 5.2-1.7.9-3.7.4-5.2-1.3l-5-5.6" stroke="#F9F6FF" stroke-width="1.75" stroke-linecap="round"/>
+    <path d="M13.8 20.9c1.3-2 3.7-2.4 5.7-.8l1.9 1.6m3.8-10.6 1.6-2.7m.8 6.1 3.1-.7" stroke="#F9F6FF" stroke-width="1.75" stroke-linecap="round"/>
+    <circle cx="9.3" cy="22.7" r="1.05" fill="#D6CAFF"/>
+  </svg>
+</template>
