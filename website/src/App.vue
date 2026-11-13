@@ -17,7 +17,7 @@ import BrandMark from './components/BrandMark.vue'
         <a href="#privacy">Privacy</a>
         <a href="#faq">FAQ</a>
       </nav>
-      <a class="header-action" href="#availability">
+      <a class="header-action" href="https://github.com/whitematteruk/Slight-Motion/releases/download/v1.0/Slight-Motion-macOS.zip">
         <span>Mac prototype</span>
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 18 18 6M8 6h10v10"/></svg>
       </a>
