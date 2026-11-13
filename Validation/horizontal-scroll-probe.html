@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Slight Motion — horizontal scroll probe</title>
+<style>
+:root { color-scheme:light; font-family:-apple-system,BlinkMacSystemFont,sans-serif; color:#18332e; background:#f6f8f6; }
+* { box-sizing:border-box; }
+body { margin:0; height:100vh; overflow:hidden; display:flex; flex-direction:column; }
+header { flex:none; background:#fff; border-bottom:1px solid #cfdad4; padding:18px 24px; }
+h1 { font-size:18px; margin:0 0 6px; }
+p { font-size:12px; line-height:1.5; color:#61756f; margin:0 0 12px; }
+.metrics { display:flex; flex-wrap:wrap; gap:12px 26px; align-items:center; }
+.metric { min-width:100px; }
+.label { display:block; font-size:10px; letter-spacing:.06em; text-transform:uppercase; color:#61756f; margin-bottom:4px; }
+output { font-size:20px; font-weight:650; font-variant-numeric:tabular-nums; white-space:nowrap; }
+.small output { font-size:14px; }
+button { border:1px solid #b8c9bf; border-radius:7px; background:#f6f8f6; color:#18332e; padding:9px 13px; cursor:pointer; }
+.buttons { display:flex; gap:8px; margin-left:auto; }
+main { min-height:0; flex:1; padding:20px 24px 24px; display:flex; flex-direction:column; }
+main p { flex:none; }
+#pane { flex:1; min-height:0; overflow:auto; overscroll-behavior:contain; border:1px solid #b8c9bf; border-radius:8px; background:#fff; scroll-behavior:auto; }
+#pane:focus-visible { outline:3px solid #2d9276; outline-offset:3px; }
+table { border-spacing:0; table-layout:fixed; width:max-content; font-size:13px; }
+th, td { width:170px; min-width:170px; height:56px; padding:12px; border-right:1px solid #dbe3de; border-bottom:1px solid #dbe3de; white-space:nowrap; text-align:left; }
+thead th { position:sticky; top:0; background:#e7f0eb; color:#215b4b; z-index:2; }
+tbody th { position:sticky; left:0; background:#f0f5f1; width:95px; min-width:95px; z-index:1; }
+thead th:first-child { left:0; width:95px; min-width:95px; z-index:3; }
+tbody tr:nth-child(even) td { background:#fafcfb; }
+tbody td.marker { background:#d6f2e7; color:#125c45; font-weight:700; box-shadow:inset 0 0 0 3px #2d9276; }
+caption { text-align:left; padding:12px; color:#61756f; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Slight Motion / horizontal scroll probe</h1>
+  <p>Local fixture. Track the green <strong>O30</strong> cell: content-left increases scrollLeft, content-right decreases it. Horizontal pulses must leave scrollTop unchanged.</p>
+  <div class="metrics">
+    <div class="metric"><span class="label">Pane scrollLeft</span><output id="left">0 px</output></div>
+    <div class="metric"><span class="label">Pane scrollTop</span><output id="top">0 px</output></div>
+    <div class="metric"><span class="label">Document focus</span><output id="focus">—</output></div>
+    <div class="metric small"><span class="label">Wheel events / mode</span><output id="wheel-count">0 / —</output></div>
+    <div class="metric small"><span class="label">Last wheel ΔX / ΔY</span><output id="wheel-delta">— / —</output></div>
+    <div class="metric small"><span class="label">Pointer screen X / Y</span><output id="pointer">— / —</output></div>
+    <div class="buttons"><button id="middle" type="button">Go to middle</button><button id="reset" type="button">Reset wheel count</button></div>
+  </div>
+</header>
+<main>
+  <p>Choose <strong>Go to middle</strong>, then leave the pointer inside the table while sending a pulse from Slight Motion. The pane scrolls independently of this fixed readout. The highlighted cell is in column O, row 30.</p>
+  <div id="pane" tabindex="0" role="region" aria-label="Two-axis scrollable table">
+    <table aria-label="Named columns A through AD and rows 1 through 60">
+      <thead><tr id="columns"><th scope="col">Row</th></tr></thead>
+      <tbody id="rows"></tbody>
+    </table>
+  </div>
+</main>
+<script>
+const pane = document.querySelector('#pane');
+const names = Array.from({length:30}, (_, index) => index < 26 ? String.fromCharCode(65 + index) : 'A' + String.fromCharCode(65 + index - 26));
+const headings = document.querySelector('#columns');
+for (const name of names) {
+  const heading = document.createElement('th');
+  heading.scope = 'col'; heading.textContent = 'Column ' + name; headings.append(heading);
+}
+const rows = document.querySelector('#rows');
+for (let row = 1; row <= 60; row++) {
+  const tr = document.createElement('tr');
+  const heading = document.createElement('th'); heading.scope = 'row'; heading.textContent = 'Row ' + row; tr.append(heading);
+  for (const name of names) {
+    const cell = document.createElement('td'); cell.textContent = name + row;
+    if (name === 'O' && row === 30) { cell.className = 'marker'; cell.id = 'marker'; cell.textContent = 'O30 · TRACK ME'; }
+    tr.append(cell);
+  }
+  rows.append(tr);
+}
+function update() {
+  document.querySelector('#left').value = Math.round(pane.scrollLeft) + ' px';
+  document.querySelector('#top').value = Math.round(pane.scrollTop) + ' px';
+  const focused = document.hasFocus();
+  document.querySelector('#focus').value = focused ? 'YES' : 'NO';
+  document.querySelector('#focus').style.color = focused ? '#257d62' : '#a34f38';
+}
+let wheelCount = 0;
+pane.addEventListener('wheel', event => {
+  wheelCount++;
+  document.querySelector('#wheel-count').value = wheelCount + ' / ' + ['pixel','line','page'][event.deltaMode];
+  document.querySelector('#wheel-delta').value = event.deltaX + ' / ' + event.deltaY;
+}, {passive:true});
+document.addEventListener('pointermove', event => {
+  document.querySelector('#pointer').value = event.screenX + ' / ' + event.screenY;
+}, {passive:true});
+document.querySelector('#middle').addEventListener('click', () => {
+  const marker = document.querySelector('#marker');
+  const cellBounds = marker.getBoundingClientRect();
+  const paneBounds = pane.getBoundingClientRect();
+  pane.scrollLeft += cellBounds.left - paneBounds.left - pane.clientLeft - (pane.clientWidth - cellBounds.width) / 2;
+  pane.scrollTop += cellBounds.top - paneBounds.top - pane.clientTop - (pane.clientHeight - cellBounds.height) / 2;
+  update();
+});
+document.querySelector('#reset').addEventListener('click', () => {
+  wheelCount = 0; document.querySelector('#wheel-count').value = '0 / —'; document.querySelector('#wheel-delta').value = '— / —';
+});
+pane.addEventListener('scroll', update, {passive:true});
+window.addEventListener('focus', update); window.addEventListener('blur', update);
+setInterval(update, 150); update();
+</script>
+</body>
+</html>

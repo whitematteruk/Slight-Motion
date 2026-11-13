@@ -9,8 +9,10 @@ struct GestureConfiguration: Sendable {
     var maximumCaptureGap: TimeInterval = 0.150
     var maximumObservationAge: TimeInterval = 0.150
     var minimumPalmWidthPixels = 12.0
+    var axisLockDistance = 0.015
+    var axisDominanceRatio = 1.4
     var pixelsPerImageHeight = 2_400.0
-    // Radius of the tolerated height band (3.84 image pixels at 480px high).
+    // Radius of the tolerated band on either axis (3.84 image pixels at 480px high).
     var positionalDeadband = 0.008
     var maximumPixelsPerUpdate = 60
 
@@ -23,7 +25,16 @@ struct HandPoint: Sendable {
     let confidence: Double
 }
 
-/// Vision landmarks in the oriented image's normalized coordinate system, with up positive.
+struct PalmPosition: Sendable {
+    let x: Double
+    let y: Double
+
+    func component(on axis: ScrollAxis) -> Double {
+        axis == .horizontal ? x : y
+    }
+}
+
+/// Oriented, normalized landmarks with the user's physical right and up positive.
 /// Width and height must describe that same oriented image, including any quarter-turn rotation.
 struct HandLandmarks: Sendable {
     let thumbTip: HandPoint
@@ -33,7 +44,7 @@ struct HandLandmarks: Sendable {
     let imageWidth: Double
     let imageHeight: Double
 
-    func measurements(configuration: GestureConfiguration) -> (ratio: Double, height: Double)? {
+    func measurements(configuration: GestureConfiguration) -> (ratio: Double, palm: PalmPosition)? {
         guard imageWidth.isFinite, imageHeight.isFinite, imageWidth > 0, imageHeight > 0 else {
             return nil
         }
@@ -48,13 +59,19 @@ struct HandLandmarks: Sendable {
             hypot((first.x - second.x) * imageWidth, (first.y - second.y) * imageHeight)
         }
         let palmWidth = pixelDistance(indexMCP, littleMCP)
-        guard palmWidth >= configuration.minimumPalmWidthPixels else { return nil }
-        return (pixelDistance(thumbTip, indexTip) / palmWidth, (indexMCP.y + littleMCP.y) / 2)
+        let aspect = imageWidth / imageHeight
+        guard palmWidth.isFinite, palmWidth >= configuration.minimumPalmWidthPixels,
+              aspect.isFinite else { return nil }
+        // Both components use oriented frame height, so intent and gain are
+        // independent of image aspect ratio and of which axis is selected.
+        let palm = PalmPosition(x: (indexMCP.x + littleMCP.x) / 2 * aspect,
+                                y: (indexMCP.y + littleMCP.y) / 2)
+        return (pixelDistance(thumbTip, indexTip) / palmWidth, palm)
     }
 }
 
 /// A distance recognizer: it produces movement only when a fresh hand position changes.
-/// Positive output means reveal later material; the event adapter owns the Quartz sign.
+/// Positive output follows the user's right or up; the event adapter owns Quartz signs.
 struct GestureEngine: Sendable {
     enum State: Equatable, Sendable {
         case waitingForOpen
@@ -65,10 +82,12 @@ struct GestureEngine: Sendable {
 
     let configuration: GestureConfiguration
     private(set) var state: State = .waitingForOpen
+    private(set) var lockedAxis: ScrollAxis?
     private var lastTimestamp: TimeInterval?
     private var confirmationStartedAt: TimeInterval?
-    // The output position stays inside a band around the observed hand height.
-    private var acceptedHeight: Double?
+    private var pinchAnchor: PalmPosition?
+    // After locking, the output position stays inside a band on the chosen axis.
+    private var acceptedPosition: Double?
     private var fractionalPixels = 0.0
 
     var isEngaged: Bool { state == .scrolling }
@@ -87,7 +106,7 @@ struct GestureEngine: Sendable {
         observation: HandLandmarks?,
         timestamp: TimeInterval,
         now: TimeInterval
-    ) -> Int? {
+    ) -> ScrollMovement? {
         guard timestamp.isFinite, now.isFinite,
               timestamp <= now + 0.010,
               now - timestamp <= configuration.maximumObservationAge else {
@@ -129,7 +148,9 @@ struct GestureEngine: Sendable {
             if let started = confirmationStartedAt,
                timestamp - started + 1e-9 >= configuration.confirmationDuration {
                 state = .scrolling
-                acceptedHeight = measurement.height
+                pinchAnchor = measurement.palm
+                lockedAxis = nil
+                acceptedPosition = nil
                 fractionalPixels = 0
                 confirmationStartedAt = nil
                 // Closing the fingertips, and motion during confirmation, never scrolls.
@@ -140,11 +161,33 @@ struct GestureEngine: Sendable {
                 state = .ready
                 return nil // Discard movement from the release frame.
             }
-            guard let anchor = acceptedHeight else {
+            guard let pinchAnchor else {
                 cancelInteraction()
                 return nil
             }
-            let displacement = measurement.height - anchor
+            guard let axis = lockedAxis else {
+                let horizontal = abs(measurement.palm.x - pinchAnchor.x)
+                let vertical = abs(measurement.palm.y - pinchAnchor.y)
+                let tolerance = 1e-12
+                if horizontal + tolerance >= configuration.axisLockDistance,
+                   horizontal + tolerance >= configuration.axisDominanceRatio * vertical {
+                    lockedAxis = .horizontal
+                } else if vertical + tolerance >= configuration.axisLockDistance,
+                          vertical + tolerance >= configuration.axisDominanceRatio * horizontal {
+                    lockedAxis = .vertical
+                }
+                if let axis = lockedAxis {
+                    acceptedPosition = measurement.palm.component(on: axis)
+                }
+                // Keep the original anchor while pending. Once locked, discard
+                // all intent travel and begin filtering from this exact frame.
+                return nil
+            }
+            guard let anchor = acceptedPosition else {
+                cancelInteraction()
+                return nil
+            }
+            let displacement = measurement.palm.component(on: axis) - anchor
             let radius = configuration.positionalDeadband
             guard abs(displacement) > radius + 1e-12 else {
                 return nil // Slow motion keeps accumulating against the same output position.
@@ -154,25 +197,27 @@ struct GestureEngine: Sendable {
             // After a stroke, small outward movement can still advance to a new
             // extreme; bounded jitter within the band cannot cause repeated reversals.
             let acceptedDisplacement = displacement - (displacement > 0 ? radius : -radius)
-            acceptedHeight = anchor + acceptedDisplacement
+            acceptedPosition = anchor + acceptedDisplacement
             let pixels = acceptedDisplacement * configuration.pixelsPerImageHeight + fractionalPixels
             let cap = configuration.maximumPixelsPerUpdate
             if abs(pixels) >= Double(cap) {
                 fractionalPixels = 0 // Capped excess must never replay after the hand stops.
-                return pixels > 0 ? cap : -cap
+                return ScrollMovement(axis: axis, pixels: pixels > 0 ? cap : -cap)
             }
             // Avoid losing a whole unit to floating-point noise at an integer boundary.
             let roundingTolerance = pixels < 0 ? -1e-9 : 1e-9
             let wholePixels = Int((pixels + roundingTolerance).rounded(.towardZero))
             fractionalPixels = pixels - Double(wholePixels)
-            return wholePixels == 0 ? nil : wholePixels
+            return wholePixels == 0 ? nil : ScrollMovement(axis: axis, pixels: wholePixels)
         }
         return nil
     }
 
     private mutating func clearMovement() {
         confirmationStartedAt = nil
-        acceptedHeight = nil
+        pinchAnchor = nil
+        lockedAxis = nil
+        acceptedPosition = nil
         fractionalPixels = 0
     }
 
@@ -216,7 +261,7 @@ struct GestureSession: Sendable {
         timestamp: TimeInterval,
         now: TimeInterval,
         generation resultGeneration: UInt64
-    ) -> Int? {
+    ) -> ScrollMovement? {
         guard isEnabled, generation == resultGeneration else { return nil }
         return engine.process(observation: observation, timestamp: timestamp, now: now)
     }

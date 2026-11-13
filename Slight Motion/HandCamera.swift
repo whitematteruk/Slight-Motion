@@ -259,14 +259,15 @@ extension HandCamera: AVCaptureVideoDataOutputSampleBufferDelegate {
         // use the known VideoDataOutput rotation configured above.
         let metadata = CMGetAttachment(sampleBuffer, key: kCGImagePropertyOrientation, attachmentModeOut: nil) as? NSNumber
         let orientation = metadata.flatMap { CGImagePropertyOrientation(rawValue: $0.uint32Value) } ?? fallbackOrientation
-        let sideways = [.left, .leftMirrored, .right, .rightMirrored].contains(orientation)
-        let rawWidth = Double(CVPixelBufferGetWidth(pixelBuffer))
-        let rawHeight = Double(CVPixelBufferGetHeight(pixelBuffer))
-        let width = sideways ? rawHeight : rawWidth
-        let height = sideways ? rawWidth : rawHeight
+        let geometry = CameraFrameGeometry(
+            rawWidth: Double(CVPixelBufferGetWidth(pixelBuffer)),
+            rawHeight: Double(CVPixelBufferGetHeight(pixelBuffer)),
+            orientation: orientation,
+            outputIsMirrored: connection.isVideoMirrored
+        )
 
         do {
-            let handler = VNImageRequestHandler(cmSampleBuffer: sampleBuffer, orientation: orientation, options: [:])
+            let handler = VNImageRequestHandler(cmSampleBuffer: sampleBuffer, orientation: geometry.orientation, options: [:])
             try handler.perform([request])
             guard isAllowed(generation), let hands = request.results, hands.count == 1,
                   let hand = hands.first else {
@@ -276,7 +277,8 @@ extension HandCamera: AVCaptureVideoDataOutputSampleBufferDelegate {
             let points = try hand.recognizedPoints(.all)
             func point(_ name: VNHumanHandPoseObservation.JointName) -> HandPoint? {
                 guard let point = points[name] else { return nil }
-                return HandPoint(x: point.location.x, y: point.location.y, confidence: Double(point.confidence))
+                return geometry.physicalPoint(x: point.location.x, y: point.location.y,
+                                              confidence: Double(point.confidence))
             }
             guard let thumb = point(.thumbTip), let index = point(.indexTip),
                   let indexMCP = point(.indexMCP), let littleMCP = point(.littleMCP) else {
@@ -284,7 +286,8 @@ extension HandCamera: AVCaptureVideoDataOutputSampleBufferDelegate {
                 return
             }
             let landmarks = HandLandmarks(thumbTip: thumb, indexTip: index, indexMCP: indexMCP,
-                                          littleMCP: littleMCP, imageWidth: width, imageHeight: height)
+                                          littleMCP: littleMCP, imageWidth: geometry.imageWidth,
+                                          imageHeight: geometry.imageHeight)
             deliver(landmarks, timestamp: timestamp, generation: generation)
         } catch {
             deliver(nil, timestamp: timestamp, generation: generation)

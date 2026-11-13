@@ -82,8 +82,13 @@ struct ContentView: View {
                         .font(.system(size: 9, weight: .semibold))
                         .foregroundStyle(.secondary)
                     HStack {
-                        Button("Later in 3s") { pulse(60) }
-                        Button("Earlier in 3s") { pulse(-60) }
+                        Button("Later in 3s") { pulse(.vertical, pixels: 60) }
+                        Button("Earlier in 3s") { pulse(.vertical, pixels: -60) }
+                    }
+                    .disabled(controller.isEnabled)
+                    HStack {
+                        Button("Content left in 3s") { pulse(.horizontal, pixels: -60) }
+                        Button("Content right in 3s") { pulse(.horizontal, pixels: 60) }
                     }
                     .disabled(controller.isEnabled)
                     if let result = controller.debugResult {
@@ -122,7 +127,7 @@ struct ContentView: View {
     private var instructions: some View {
         VStack(alignment: .leading, spacing: 13) {
             instruction("cursorarrow", title: "Point at your page", detail: "Leave the pointer over the text you want to scroll.")
-            instruction("hand.pinch", title: "Pinch, then move", detail: "Move up to read on. Move down to go back.")
+            instruction("hand.pinch", title: "Pinch, then drag", detail: "Pinch, then drag left, right, up or down.")
             instruction("hand.raised.fingers.spread", title: "Release and get comfortable", detail: "Open your fingers to reset. Pinch again anywhere.")
         }
     }
@@ -182,8 +187,8 @@ struct ContentView: View {
         .font(.system(size: 11))
     }
 
-    private func pulse(_ pixels: Int) {
-        controller.queueDiagnosticPulse(pixels)
+    private func pulse(_ axis: ScrollAxis, pixels: Int) {
+        controller.queueDiagnosticPulse(ScrollMovement(axis: axis, pixels: pixels))
         dismiss()
     }
 }

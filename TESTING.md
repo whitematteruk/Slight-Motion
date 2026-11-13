@@ -9,11 +9,55 @@ Recorded 6 November 2026.
 | Xcode | 27.0 (27A266a) |
 | Deployment target | macOS 14.0 |
 | Signing | Existing local Apple Development identity; Hardened Runtime; Camera entitlement; App Sandbox off |
-| External scroll verification | Safari later pulse; Preview later/earlier pulses and live pinch scroll/open-hand return confirmed; revised-filter retest reported steadier pauses with scrolling preserved |
+| Prior vertical prototype verification | Safari later pulse; Preview later/earlier pulses and live pinch scroll/open-hand return confirmed; revised-filter retest reported steadier pauses with scrolling preserved |
 | Safari | 27.0 (21625.1.29.18.24) |
 | Preview | 11.0 (1113.5.3) |
 
-## Verified
+## Horizontal extension — 6 November 2026
+
+This extension adds one axis lock per pinch, using the existing camera, permission flow, pinch confirmation/release thresholds and lifecycle cancellation. The menu instruction is **“Pinch, then drag left, right, up or down.”** A fresh pinch anchors the palm midpoint in two dimensions; confirmation, lock and release frames emit nothing. Net horizontal displacement is multiplied by oriented frame width / height before comparing axes. Physical right and up are positive after resolving capture rotation and video-data-output mirroring. Pre-lock travel is discarded, and movement on the other axis never becomes another action at a document boundary.
+
+The environment is the MacBook Air/M2, macOS 26.7.2, Xcode 27.0, Safari 27.0 and Preview 11.0 recorded above. Camera distance, lighting and Natural Scrolling settings have not been recorded for a new live hand trial.
+
+| Validation | Status |
+| --- | --- |
+| Debug build | Passed during implementation |
+| Targeted unit tests | Passed: 36 tests, 0 failures, 0 skipped (28 recognizer/lifecycle, 4 Quartz, 4 camera geometry) |
+| Release build and signature | Passed; Debug and Release signatures verified with `codesign --verify --deep --strict` |
+| Real horizontal Safari pulse | Passed by user report in both directions; scroll and wheel readouts corroborate axis isolation and return to the starting column |
+| Preview horizontal pulse / zoomed PDF | Pending |
+| Numbers / wide spreadsheet | Pending |
+| Live hand acceptance checks below | Pending on the real Mac; prior vertical evidence does not validate the new axis lock |
+
+The Debug **Slight Motion Diagnostics** scheme now offers **Content left in 3s** and **Content right in 3s** alongside the vertical pulses. With gesture scrolling Off, select a pulse, close the panel and leave the pointer over the target pane during the three-second delay. `Validation/horizontal-scroll-probe.html` supplies a wide table with named columns A–AD, 60 rows and a green **O30** marker. Choose **Go to middle**. A content-left pulse should increase `scrollLeft`; content-right should decrease it. Both should leave `scrollTop` unchanged. Fixed focus, wheel-delta/count and pointer-coordinate readouts help distinguish delivery, direction and pane routing. The pulse result is recorded below; live hand checks remain pending.
+
+### Horizontal Safari pulse record
+
+With camera scrolling Off, the user ran **Content right in 3s** followed by **Content left in 3s** over the local table and confirmed: “Both directions work; same row.” Computer-use inspection recorded:
+
+| Readout | Before | After content-right | After content-left |
+| --- | --- | --- | --- |
+| Pane `scrollLeft` | 1,625 px | 1,565 px | 1,625 px |
+| Pane `scrollTop` | 1,266 px | 1,266 px | 1,266 px |
+| Wheel events | 0 | 1, pixel mode | 2, pixel mode |
+| Last wheel ΔX / ΔY | — | −60 / 0 | +60 / 0 |
+
+This verifies the horizontal Quartz sign and separate-process delivery in Safari, with no vertical scroll during the pair. Document focus read **YES** after the first pulse and **NO** after the pair while the user replied in this chat; uninterrupted focus and a stationary pointer were not independently established. Natural Scrolling was not recorded or changed. An earlier automated attempt lost its target when Safari's active window changed; it is excluded from the pass. The final test run passed all 36 tests with no runtime warnings. Debug and Release builds passed; their only build warning was skipped App Intents metadata extraction because this app has no App Intents dependency.
+
+Camera-geometry tests exercise all eight EXIF orientations with mirrored and unmirrored video-data outputs, including a remaining quarter-turn that moves a raw horizontal reflection onto the upright vertical axis. Recognizer tests include fingertip-only motion, slow net movement, exact lock thresholds, diagonal ambiguity, reversals, selected-axis isolation, clean release and cancellation of a horizontal lock and fractional remainder. Live hand direction, comfort and stability still need testing with the new lock.
+
+| Acceptance check | Required observation | Result |
+| --- | --- | --- |
+| Horizontal delivery | Track a named cell through five left/right strokes in Safari or Numbers, staying on the same row and reversing within a pinch; repeat in a Preview PDF wider than its window | Pending real-Mac trial |
+| Axis choice and turns | Clear horizontal/vertical movement chooses the corresponding axis; ambiguous diagonals remain pending; turning a corner keeps the first axis; release and repinch selects a new one | Synthetic coverage added; live trial pending |
+| Slow onset | Slow, steady initial movement selects either axis comfortably, including vertical strokes with the new initial travel | Pending live trial |
+| Release and recovery | Opening during a large movement produces no release-frame output; open-hand return is still; tracking loss requires visible open fingers and a fresh pinch | Synthetic coverage added; live trial pending |
+| Physical direction | Left/right content follows either hand with Natural Scrolling on and off; up still reveals later text | Pending for both hands and both settings |
+| Stability and axis isolation | A relaxed two-second pinch has no visible drift; diagonal vertical scrolling has no horizontal leakage | Synthetic checks do not establish live stability; real-Mac trial pending |
+| Focus, pointer and boundaries | Only the pane under the stationary pointer moves; target app keeps keyboard focus; an edge causes no vertical fallback, navigation, click or drag | Pending live trial |
+| Menu, disable and stale results | Menu opening, disable, tracking loss and stale frames cancel the lock and all pending movement; fresh engagement is required | Synthetic coverage added; live trial pending |
+
+## Prior vertical prototype — verified
 
 - Debug and Release `xcodebuild build` succeeded with local signing. Release rebuilds also passed after the permission-recovery hint and the 0.008 spatial-filter revision; the revised Release signature is valid.
 - Debug and Release local signatures are valid. Generated permission metadata was checked; deployment target is macOS 14, Camera entitlement is present and App Sandbox is off.
@@ -27,11 +71,11 @@ Recorded 6 November 2026.
 - The user confirmed that both **Later in 3s** and **Earlier in 3s** moved the six-page PDF in Preview in the expected directions. Native computer-use inspection found the same page and scrollbar position before and after the opposite-direction pair, with the document container focused afterward. This passes the user-reported Preview pulse routing/direction smoke check; individual intermediate displacements were not measured.
 - With gesture scrolling enabled, the user confirmed live pinch scrolling of the Preview PDF and open-hand repositioning. After reporting comfortable-pause drift/jitter, the user retested the revised filter and answered: “Steadier, and scrolling still works.” This confirms subjective stability improvement with deliberate scrolling preserved; it does not establish zero residual drift.
 
-The desktop was locked during the initial UI validation attempt; GUI validation resumed after it became available. The native computer-use connection could not attach to the menu-only app until its panel was opened manually; that attachment limitation was not an app crash. The integrated camera-to-gesture-to-external-scroll milestone has been demonstrated on the real Mac. The extended acceptance checks below remain pending.
+The desktop was locked during the initial UI validation attempt; GUI validation resumed after it became available. The native computer-use connection could not attach to the menu-only app until its panel was opened manually; that attachment limitation was not an app crash. The prior vertical camera-to-gesture-to-external-scroll milestone was demonstrated on the real Mac. These historical results do not establish live behavior with the new per-pinch axis lock.
 
 For permission recovery, grant access in **System Settings → Privacy & Security → Camera / Accessibility**, return and select **Check permissions**. If the app still reports missing access, quit it completely and relaunch the same signed build. Keep its location and signing identity stable during validation.
 
-## Live external-scroll smoke
+## Prior vertical prototype — live external-scroll smoke
 
 With gesture scrolling Off, the user selected **Later in 3s**, then placed the pointer and clicked over the local Safari article during the delay. The user reported that the text moved. Computer-use inspection recorded:
 
@@ -56,9 +100,9 @@ The final focused UI element was the document container. The unchanged final pos
 
 Safari earlier scrolling, sidebar targeting, Natural Scrolling on/off and stationary pointer verification remain pending.
 
-## Live gesture integration
+## Prior vertical prototype — live gesture integration
 
-After enabling camera gesture scrolling, the user confirmed that a live pinch moved the PDF in Preview: “Scrolling works.” Open-hand lowering/repositioning also passed by user report. These results remain valid.
+After enabling camera gesture scrolling, the user confirmed that a live pinch moved the PDF in Preview: “Scrolling works.” Open-hand lowering/repositioning also passed by user report. These remain evidence for the prior vertical prototype; the new axis lock needs its own live trial.
 
 An initial two-second controlled hold was reported still, but a later comfortable-pause trial revealed drift/jitter. That later feedback supersedes the hold pass. The original positional deadband accepted an entire displacement once it crossed 0.003 of image height, so small landmark changes could become visible page steps. Tests with perfectly constant heights passed without covering this pattern.
 
@@ -77,17 +121,21 @@ All values live in `GestureConfiguration.prototype` in `Slight Motion/GestureEng
 | Continuous close to engage | 100 ms |
 | Maximum capture gap / observation age | 150 ms / 150 ms |
 | Minimum palm width | 12 oriented image pixels |
+| Axis lock distance | 0.015 oriented frame heights (7.2 image pixels at 480 pixels high) |
+| Axis dominance | Selected component ≥ 1.4 × the other component; one axis per pinch |
 | Gain | 2,400 scroll pixels per full image height |
-| Positional deadband | 0.008 of image height; spatial hysteresis, output only beyond the band |
+| Positional deadband | 0.008 of image height on either locked axis; spatial hysteresis, output only beyond the band |
 | Per-update cap | 60 pixels, excess discarded |
 | Capture request | 640 × 480 and 30 fps where supported |
-| Quartz sign | Positive movement toward later text → negative `wheel1`; Safari later pulse and Preview later/earlier pulses verified; Natural Scrolling comparisons pending |
+| Quartz sign | Physical up → negative `wheel1`; physical right → positive `wheel2`; horizontal sign verified by Safari pulses; Natural Scrolling comparisons pending |
 
-The previous 0.003 deadband was replaced with a 0.008 spatial hysteresis radius: 3.84 camera-image pixels at 480 pixels high. The filtered height stays fixed while the measured height remains inside the band; only displacement beyond its edge becomes scroll output. There is no temporal smoothing or gain change. At the current gain, the ignored travel corresponds to about 19.2 scroll units when starting and about 38.4 when reversing an established stroke. Receiving-app page displacement can differ from commanded units.
+The previous 0.003 deadband was replaced with a 0.008 spatial hysteresis radius: 3.84 camera-image pixels at 480 pixels high. The accepted position along the locked axis stays fixed while the measured position remains inside the band; only displacement beyond its edge becomes scroll output. There is no temporal smoothing or gain change. At the current gain, the ignored travel corresponds to about 19.2 scroll units after locking and about 38.4 when reversing an established stroke. Axis selection adds 0.015 frame heights of initial travel, discarded on the lock frame. Receiving-app page displacement can differ from commanded units.
 
-The filter reduces small fluctuations but does not guarantee a motionless page during every relaxed hold. After a stroke, noise crossing the band can still produce bounded page movement. Deterministic regression tests and the Release rebuild pass; the live retest confirmed steadier relaxed pauses with scrolling preserved by user report. No accidental-scroll trial has been completed; orientation handling is unmeasured, and seated distance and lighting were not recorded.
+The filter reduces small fluctuations but does not guarantee a motionless page during every relaxed hold. After a stroke, noise crossing the band can still produce bounded page movement. The prior vertical live retest confirmed steadier relaxed pauses with scrolling preserved by user report. Comfort and stability with the new axis lock remain pending. No accidental-scroll trial has been completed; physical camera direction is unmeasured, and seated distance and lighting were not recorded.
 
-## Pending live checklist
+## Prior vertical prototype — remaining live checklist
+
+This checklist preserves the outstanding checks from the vertical prototype. Its “horizontal-only movement produces no scroll” requirement applied before horizontal support; the current requirement is selected-axis isolation, as listed in the horizontal extension section above.
 
 Use the **Slight Motion Diagnostics** scheme and its Debug diagnostic pulse first; camera capture may stay Off. After choosing a pulse, close the panel and place the pointer over the target pane during the three-second delay. Then enable camera input and test at normal seated distance. Keep Safari and Preview away from document scroll limits.
 

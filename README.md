@@ -2,7 +2,9 @@
 
 A native macOS menu-bar prototype for scrolling the pane under your pointer with a deliberate thumb–index pinch. Requires macOS 14 or later. Built with SwiftUI, AVFoundation, Vision and Core Graphics.
 
-The app launches **Off**. Enable gesture scrolling, allow Camera and Accessibility, then close the menu. Leave the pointer over the document, show one open hand, pinch briefly, and move your hand up to reveal later text or down to return to earlier text. Release before repositioning. Movement maps to distance, with no momentum or timed repeats.
+The app launches **Off**. Enable gesture scrolling, allow Camera and Accessibility, then close the menu. Leave the pointer over the document and show one open hand. **Pinch, then drag left, right, up or down.** Drag left to reveal later columns, right to return to earlier columns, up to reveal later text and down to return to earlier text. Release before repositioning. Movement maps to distance, with no momentum or timed repeats.
+
+The first clear movement after each pinch selects horizontal or vertical scrolling. A diagonal remains pending until one direction is clear. The selected axis stays fixed during that pinch, including reversals and turns. Release and pinch again to switch axes. Pinch confirmation and axis selection produce no scroll, so there is a short initial travel before movement starts. The pointer stays in place and the document app keeps keyboard focus.
 
 Opening the menu pauses output and cancels the current pinch. Close it, open your fingers, and pinch again. The menu-bar hand becomes filled while a pinch is engaged. Disable and Quit stop capture and invalidate pending output.
 
@@ -41,24 +43,25 @@ For the separate-app smoke test, quit the running copy, select the shared **Slig
 open "build/Build/Products/Debug/Slight Motion.app" --args --scroll-diagnostics
 ```
 
-The menu then includes **Later in 3s** and **Earlier in 3s**. Choose one, close the panel, and place the pointer over Safari or a PDF in Preview before the delay expires. The delay starts after the panel closes. Each action sends one 60-pixel event and requires Accessibility access. Camera capture can remain Off. These controls are absent from the normal menu and Release builds.
+The menu then includes **Later in 3s**, **Earlier in 3s**, **Content left in 3s** and **Content right in 3s**. Choose one, close the panel, and place the pointer over Safari or a PDF in Preview before the delay expires. The delay starts after the panel closes. Each action sends one 60-pixel event and requires Accessibility access. Camera capture can remain Off. These controls are absent from the normal menu and Release builds.
 
 Local fixtures are included for repeatable checks:
 
 ```sh
 open -a Safari "Validation/scroll-probe.html"
+open -a Safari "Validation/horizontal-scroll-probe.html"
 open -a Preview "Validation/preview-scroll-probe.pdf"
 ```
 
-The Safari fixture has 60 numbered sections, a separate scrollable sidebar, and live document/sidebar position and document-focus readouts. Choose **Go to middle** before testing both directions; widen the window if the sidebar is hidden. The Preview fixture has six pages; select continuous scrolling before testing.
+The article fixture has 60 numbered sections, a separate scrollable sidebar, and live document/sidebar position and document-focus readouts. The horizontal fixture has a table with columns A–AD, 60 rows and a green **O30** cell to track. Its fixed readouts show both scroll axes, focus, wheel events and pointer coordinates. Choose **Go to middle** before testing both directions. Widen the article window if its sidebar is hidden. The six-page Preview fixture supports vertical checks in **View → Continuous Scroll**. For horizontal checks, zoom wider than the window.
 
-See [TESTING.md](TESTING.md) for verified results and the pending live acceptance checklist. A successful build and unit tests do not establish the cross-app scrolling milestone.
+See the validation record for completed tests and pending live checks. [TESTING.md](TESTING.md)
 
 ## Implementation
 
-- `GestureEngine.swift` contains all initial tuning, aspect-corrected landmark measurements, the pinch state machine and distance mapping.
-- `HandCamera.swift` serializes capture and Vision analysis, discards late frames and emits timestamped landmarks. Camera frames remain in memory; the app does not save, log or upload them.
+- `GestureEngine.swift` contains tuning, aspect-corrected palm measurements, the pinch state machine, per-pinch axis selection and distance mapping.
+- `HandCamera.swift` serializes capture and Vision analysis, discards late frames and converts the analysed frames to physical right/up coordinates after resolving rotation and video-output mirroring. Camera frames remain in memory; the app does not save, log or upload them.
 - `MotionController.swift` manages permissions, menu interruptions, capture generations, stale results and system suspension.
-- `QuartzScrollSink.swift` maps positive internal movement to a negative Quartz vertical pixel delta and posts at the current pointer location. Safari later-direction and Preview later/earlier diagnostic pulses have been verified. The user also confirmed live pinch scrolling and open-hand repositioning in Preview; the extended acceptance checklist and Natural Scrolling comparisons remain pending.
+- `QuartzScrollSink.swift` converts the selected axis and physical direction into one pixel scroll-wheel event at the current pointer location. Horizontal events use wheel 2 and vertical events use wheel 1.
 
-The prototype supports one camera, one visible hand and vertical scrolling. The spatial filter ignores movement inside a 0.008-image-height band and scrolls only the portion beyond it. This adds some travel before scrolling starts or reverses; gain is unchanged. A live retest confirmed steadier relaxed pauses while deliberate scrolling still worked. Small page movement after a stroke is still possible. See [TESTING.md](TESTING.md) for the tuning record and remaining checks.
+The prototype supports one camera, one visible hand and one scrolling axis per pinch. Axis selection requires 0.015 frame heights of net travel and 1.4× dominance over the other axis, then discards that pre-lock travel. Both axes use frame-height units, a 0.008 spatial hysteresis band, a 2,400-pixel gain and a 60-pixel per-update cap. The earlier vertical prototype's live retest reported steadier relaxed pauses. Comfort and stability with the axis lock still need a live retest.

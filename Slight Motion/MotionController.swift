@@ -31,7 +31,7 @@ final class MotionController: ObservableObject {
     private var lastFrameAt: TimeInterval?
     private var captureStartedAt: TimeInterval?
     private var lastPermissionCheck: TimeInterval = 0
-    private var pendingPulse: Int?
+    private var pendingPulse: ScrollMovement?
     private var pulseTask: Task<Void, Never>?
     private var timer: Timer?
     private var observers: [NSObjectProtocol] = []
@@ -147,14 +147,14 @@ final class MotionController: ObservableObject {
         if visible {
             cancelPulse()
             recheckAndResume()
-        } else if let pixels = pendingPulse {
+        } else if let movement = pendingPulse {
             pendingPulse = nil
-            deliverPulseAfterDelay(pixels)
+            deliverPulseAfterDelay(movement)
         }
         updateStatus()
     }
 
-    func queueDiagnosticPulse(_ pixels: Int) {
+    func queueDiagnosticPulse(_ movement: ScrollMovement) {
         guard diagnosticsEnabled, !isEnabled else { return }
         cancelPulse()
         if !CGPreflightPostEventAccess() {
@@ -165,7 +165,7 @@ final class MotionController: ObservableObject {
                 return
             }
         }
-        pendingPulse = pixels
+        pendingPulse = movement
         debugResult = "Close this panel. Pulse follows in 3 seconds."
     }
 
@@ -251,8 +251,8 @@ final class MotionController: ObservableObject {
         let now = Self.now
         lastFrameAt = timestamp
         guard !menuIsOpen, !systemSuspended, timestamp >= acceptSamplesAfter else { return }
-        if let pixels = gesture.process(observation: observation, timestamp: timestamp, now: now, generation: gesture.generation) {
-            if !sink.post(pixelsTowardLater: pixels) {
+        if let movement = gesture.process(observation: observation, timestamp: timestamp, now: now, generation: gesture.generation) {
+            if !sink.post(movement) {
                 refreshPermissions()
                 stopCamera()
                 resetRecognition()
@@ -313,13 +313,13 @@ final class MotionController: ObservableObject {
                 statusDetail = "Show one hand and separate your thumb and index finger."
             case .ready:
                 statusTitle = "Ready to pinch"
-                statusDetail = "Pinch, then move your hand up to read on."
+                statusDetail = "Pinch, then drag left, right, up or down."
             case .confirmingPinch:
                 statusTitle = "Hold your pinch…"
                 statusDetail = "Keep your fingers together for a moment."
             case .scrolling:
                 statusTitle = "Pinch engaged"
-                statusDetail = "Move up or down. Hold still to stop. Release to reset."
+                statusDetail = "Drag along your chosen direction. Hold still to stop. Release to reset."
             }
         }
     }
@@ -331,15 +331,20 @@ final class MotionController: ObservableObject {
         pulseTask = nil
     }
 
-    private func deliverPulseAfterDelay(_ pixels: Int) {
+    private func deliverPulseAfterDelay(_ movement: ScrollMovement) {
         debugResult = "Panel closed. Pulse scheduled in 3 seconds."
         let generation = pulseGeneration
         pulseTask = Task { [weak self] in
             try? await Task.sleep(for: .seconds(3))
             guard !Task.isCancelled, let self, self.pulseGeneration == generation,
                   !self.menuIsOpen, !self.systemSuspended else { return }
-            self.debugResult = self.sink.post(pixelsTowardLater: pixels)
-                ? "Sent \(pixels > 0 ? "later" : "earlier") pulse. Verify the other app kept focus."
+            let direction: String
+            switch movement.axis {
+            case .horizontal: direction = movement.pixels > 0 ? "content right" : "content left"
+            case .vertical: direction = movement.pixels > 0 ? "later" : "earlier"
+            }
+            self.debugResult = self.sink.post(movement)
+                ? "Sent \(direction) pulse. Verify the other app kept focus."
                 : "Pulse blocked. Check Accessibility permission."
         }
     }
